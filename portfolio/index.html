@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Portfolio</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="dataManager.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B5CF6',
+                        secondary: '#A855F7',
+                        accent: '#C084FC'
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'bounce-in': 'bounceIn 0.8s ease-out'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Black Theme with Purple Animation */
+        body {
+            background: linear-gradient(-45deg, #000000, #1a0b2e, #16213e, #0f3460);
+            background-size: 400% 400%;
+            animation: purpleGradient 15s ease infinite;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+            animation: purplePulse 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes purpleGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes purplePulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Animated Purple Borders */
+        .purple-border {
+            border: 2px solid transparent;
+            background: linear-gradient(45deg, rgba(139, 92, 246, 0.8), rgba(168, 85, 247, 0.8), rgba(192, 132, 252, 0.8));
+            background-clip: padding-box;
+            position: relative;
+        }
+
+        .purple-border::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #8b5cf6, #a855f7, #c084fc, #8b5cf6);
+            background-size: 400% 400%;
+            border-radius: inherit;
+            z-index: -1;
+            animation: borderGlow 3s ease infinite;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+
+        /* Floating Particles Background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Enhanced Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100px) scale(0.8); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(-90deg); opacity: 0.8; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        /* Typing Animation */
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        @keyframes blink {
+            0%, 50% { border-color: transparent; }
+            51%, 100% { border-color: #8B5CF6; }
+        }
+
+        .typing-animation {
+            overflow: hidden;
+            border-right: 3px solid #8B5CF6;
+            white-space: nowrap;
+            animation: typing 3s steps(30) 1s both, blink 1s infinite;
+        }
+
+        /* Parallax Effect */
+        .parallax {
+            transform: translateZ(0);
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Enhanced Glass Effect */
+        .glass-effect {
+            backdrop-filter: blur(20px) saturate(180%);
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+        }
+        
+        .dark .glass-effect {
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Cinematic Hover Effects */
+        .cinematic-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .cinematic-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Profile image styling - stable, no animations */
+        .profile-image {
+            border-radius: 50%;
+        }
+
+        /* Purple Glowing Text Effect */
+        .glow-text {
+            text-shadow: 0 0 10px rgba(139, 92, 246, 0.8),
+                         0 0 20px rgba(139, 92, 246, 0.5),
+                         0 0 30px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Professional Name Styling */
+        .professional-name {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            /* Remove all animations */
+        }
+
+        /* Remove typing animation */
+        .typing-animation {
+            animation: none !important;
+        }
+
+        /* Remove bounce animation */
+        .animate-bounce-in {
+            animation: none !important;
+        }
+
+        /* Remove slide animations */
+        .animate-slide-up {
+            animation: none !important;
+        }
+
+        /* Dark Theme */
+        body {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+
+
+
+
+
+
+        /* Pulse Animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Stagger Animation */
+        .stagger-animation {
+            animation-delay: calc(var(--stagger) * 0.1s);
+        }
+
+        /* Scroll Reveal Animation */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Morphing Background Shapes */
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(139, 92, 246, 0.1), rgba(168, 85, 247, 0.1));
+            animation: morphShape 20s ease-in-out infinite;
+        }
+        
+        @keyframes morphShape {
+            0%, 100% { border-radius: 50% 40% 30% 70%; transform: rotate(0deg) scale(1); }
+            25% { border-radius: 30% 60% 70% 40%; transform: rotate(90deg) scale(1.1); }
+            50% { border-radius: 60% 30% 40% 70%; transform: rotate(180deg) scale(0.9); }
+            75% { border-radius: 40% 70% 60% 30%; transform: rotate(270deg) scale(1.05); }
+        }
+    </style>
+</head>
+<body class="transition-colors duration-300 relative">
+    <!-- Animated Background Particles -->
+    <div id="root" class="dark"></div>
+    
+    
+    <!-- Floating particles background -->
+    <div class="particles" id="particles"></div>
+    
+    
+    <!-- Morphing Background Shapes -->
+    <div class="bg-shape" style="width: 300px; height: 300px; top: 10%; left: -10%; animation-delay: 0s;"></div>
+    <div class="bg-shape" style="width: 200px; height: 200px; top: 60%; right: -5%; animation-delay: 5s;"></div>
+    <div class="bg-shape" style="width: 400px; height: 400px; bottom: 20%; left: 50%; animation-delay: 10s;"></div>
+    <script type="text/babel" src="app.js"></script>
+    <script type="text/babel" src="security-components.js"></script>
+    <script type="text/babel" src="components.js"></script>
+
+    <script>
+        // Enhanced Purple Particle System (no falling lines)
+        function createFloatingParticles() {
+            const container = document.getElementById('particles');
+            
+            function createParticle() {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 4 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                
+                container.appendChild(particle);
+                
+                setTimeout(() => {
+                    particle.remove();
+                }, 7000);
+            }
+            
+            setInterval(createParticle, 300);
+        }
+
+
+        // Initialize effects when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            createFloatingParticles();
+        });
+    </script>
+</body>
+</html>
