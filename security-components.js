@@ -139,7 +139,7 @@ const CloudToolsSection = () => {
                         ☁️ Cloud Security Expertise
                     </h2>
                     <p className="text-lg text-gray-300 animate-slide-up" style={{animationDelay: '0.5s'}}>
-                        Multi-cloud security architecture and platform-specific security tools
+                        Multii-cloud security architecture and platform-specific security tools
                     </p>
                 </div>
                 
